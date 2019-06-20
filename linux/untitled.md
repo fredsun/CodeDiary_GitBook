@@ -6,10 +6,6 @@ description: 重新安装Linux后的部分设置和快捷键
 
 
 
-## \*\*\*\*
-
-## 
-
 ## 设置root账户的密码
 
 ```text
@@ -81,50 +77,50 @@ dG #删除当前行到底
 
 ### FFmpeg 准备
 
-1. 下载FFmpeg 4.1.3
+#### 1. 下载FFmpeg 4.1.3
 
-   ```text
-   https://github.com/FFmpeg/FFmpeg/archive/n4.1.3.tar.gz
-   tar -zxvf n4.1.3.tar.gz
-   ```
+```text
+https://github.com/FFmpeg/FFmpeg/archive/n4.1.3.tar.gz
+tar -zxvf n4.1.3.tar.gz
+```
 
-2. 编译FFmpeg
+#### 2. 编译FFmpeg
 
-   * 4.1 修改 configure
+**2.1 修改 configure**
 
-     ```text
-     SLIBNAME_WITH_MAJOR='$(SLIBNAME).$(LIBMAJOR)'  
-     LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'  
-     SLIB_INSTALL_NAME='$(SLIBNAME_WITH_VERSION)'  
-     SLIB_INSTALL_LINKS='$(SLIBNAME_WITH_MAJOR)$(SLIBNAME)'
-     ```
+```text
+  SLIBNAME_WITH_MAJOR='$(SLIBNAME).$(LIBMAJOR)'  
+  LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'  
+  SLIB_INSTALL_NAME='$(SLIBNAME_WITH_VERSION)'  
+  SLIB_INSTALL_LINKS='$(SLIBNAME_WITH_MAJOR)$(SLIBNAME)'
+```
 
-     修改为
+修改为
 
-     ```text
-     SLIBNAME_WITH_MAJOR='$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'  
-     LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'  
-     SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'  
-     SLIB_INSTALL_LINKS='$(SLIBNAME)'
-     ```
+```text
+  SLIBNAME_WITH_MAJOR='$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'  
+  LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'  
+  SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'  
+  SLIB_INSTALL_LINKS='$(SLIBNAME)'
+```
 
-   * 4.2 新建build.sh
+**2.2 新建build.sh**
 
-   ```text
-   #!/bin/bash
-   NDK=/home/Documents/NDK/android-ndk-r15c
-   ADDI_LDFLAGS="-fPIE -pie"
-   ADDI_CFLAGS="-fPIE -pie -march=armv7-a -mfloat-abi=softfp -mfpu=neon"
-   CPU=armv7-a
-   ARCH=arm
-   HOST=arm-linux
-   SYSROOT=$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot
-   CROSS_PREFIX=$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-
-   PREFIX=$(pwd)/android/$CPU
-   x264=$(pwd)/x264/android/$CPU
+```text
+  #!/bin/bash
+  NDK=/home/Documents/NDK/android-ndk-r15c
+  ADDI_LDFLAGS="-fPIE -pie"
+  ADDI_CFLAGS="-fPIE -pie -march=armv7-a -mfloat-abi=softfp -mfpu=neon"
+  CPU=armv7-a
+  ARCH=arm
+  HOST=arm-linux
+  SYSROOT=$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+  CROSS_PREFIX=$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-
+  PREFIX=$(pwd)/android/$CPU
+  x264=$(pwd)/x264/android/$CPU
 
-   configure()
-   {
+  configure()
+  {
       ./configure \
       --prefix=$PREFIX \
       --disable-encoders \
@@ -185,21 +181,30 @@ dG #删除当前行到底
       --sysroot=$SYSROOT \
       --extra-cflags="-I$x264/include $ADDI_CFLAGS" \
       --extra-ldflags="-L$x264/lib $ADDI_LDFLAGS"
-   }
+  }
 
-   build()
-   {
+  build()
+  {
       make clean
 
       configure
       make -j4
       make install
-   }
+  }
 
-   build
-   ```
+  build
+```
 
-   查看所有编译配置选项：./configure --help 查看支持的解码器：./configure --list-decoders 查看支持的编码器：./configure --list-encoders 查看支持的硬件加速：./configure --list-hwaccels 1. build之前需要执行 `./configure` 2. 赋予脚本执行权限：`chmod +x build.sh` 3. 执行脚本开始编译：`./build.sh`
+* 查看所有编译配置选项：./configure --help
+* 查看支持的解码器：./configure --list-decoders
+* 查看支持的编码器：./configure --list-encoders
+* 查看支持的硬件加速：./configure --list-hwaccels
+
+  **2.3 编译**
+
+* build之前需要执行 `./configure`
+* 赋予脚本执行权限：`chmod +x build.sh`
+* 执行脚本开始编译：`./build.sh`
 
 ### 报错汇总
 
