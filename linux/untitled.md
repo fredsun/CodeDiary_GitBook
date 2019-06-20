@@ -4,8 +4,6 @@ description: 重新安装Linux后的部分设置和快捷键
 
 # Linux Tips
 
-
-
 ## 设置root账户的密码
 
 ```text

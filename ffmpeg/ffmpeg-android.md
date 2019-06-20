@@ -4,10 +4,6 @@ description: FFmpeg的Android初探
 
 # FFmpeg Android
 
-## 
-
-\*\*\*\*
-
 ## 设置root账户的密码
 
 ```text
