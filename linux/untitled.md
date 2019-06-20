@@ -8,6 +8,8 @@ description: 重新安装Linux后的部分设置和快捷键
 
 ## \*\*\*\*
 
+## 
+
 ## 设置root账户的密码
 
 ```text
@@ -108,48 +110,96 @@ dG #删除当前行到底
 
    * 4.2 新建build.sh
 
-     \`\`\`
+   ```text
+   #!/bin/bash
+   NDK=/home/Documents/NDK/android-ndk-r15c
+   ADDI_LDFLAGS="-fPIE -pie"
+   ADDI_CFLAGS="-fPIE -pie -march=armv7-a -mfloat-abi=softfp -mfpu=neon"
+   CPU=armv7-a
+   ARCH=arm
+   HOST=arm-linux
+   SYSROOT=$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+   CROSS_PREFIX=$NDK/toolchains/llvm/prebuilt/linux-x86_64/bin/armv7a-linux-androideabi21-
+   PREFIX=$(pwd)/android/$CPU
+   x264=$(pwd)/x264/android/$CPU
 
-     **!/bin/bash**
+   configure()
+   {
+      ./configure \
+      --prefix=$PREFIX \
+      --disable-encoders \
+      --disable-decoders \
+      --disable-avdevice \
+      --disable-static \
+      --disable-doc \
+      --disable-ffplay \
+      --disable-network \
+      --disable-doc \
+      --disable-symver \
+      --enable-neon \
+      --enable-shared \
+      --enable-libx264 \
+      --enable-gpl \
+      --enable-pic \
+      --enable-jni \
+      --enable-pthreads \
+      --enable-mediacodec \
+      --enable-encoder=aac \
+      --enable-encoder=gif \
+      --enable-encoder=libopenjpeg \
+      --enable-encoder=libmp3lame \
+      --enable-encoder=libwavpack \
+      --enable-encoder=libx264 \
+      --enable-encoder=mpeg4 \
+      --enable-encoder=pcm_s16le \
+      --enable-encoder=png \
+      --enable-encoder=srt \
+      --enable-encoder=subrip \
+      --enable-encoder=yuv4 \
+      --enable-encoder=text \
+      --enable-decoder=aac \
+      --enable-decoder=aac_latm \
+      --enable-decoder=libopenjpeg \
+      --enable-decoder=mp3 \
+      --enable-decoder=mpeg4_mediacodec \
+      --enable-decoder=pcm_s16le \
+      --enable-decoder=flac \
+      --enable-decoder=flv \
+      --enable-decoder=gif \
+      --enable-decoder=png \
+      --enable-decoder=srt \
+      --enable-decoder=xsub \
+      --enable-decoder=yuv4 \
+      --enable-decoder=vp8_mediacodec \
+      --enable-decoder=h264_mediacodec \
+      --enable-decoder=hevc_mediacodec \
+      --enable-ffmpeg \
+      --enable-bsf=aac_adtstoasc \
+      --enable-bsf=h264_mp4toannexb \
+      --enable-bsf=hevc_mp4toannexb \
+      --enable-bsf=mpeg4_unpack_bframes \
+      --enable-cross-compile \
+      --cross-prefix=$CROSS_PREFIX \
+      --target-os=android \
+      --arch=$ARCH \
+      --sysroot=$SYSROOT \
+      --extra-cflags="-I$x264/include $ADDI_CFLAGS" \
+      --extra-ldflags="-L$x264/lib $ADDI_LDFLAGS"
+   }
 
-     NDK=/home/Documents/NDK/android-ndk-r15c
+   build()
+   {
+      make clean
 
-     ADDI\_LDFLAGS="-fPIE -pie"
-
-     ADDI\_CFLAGS="-fPIE -pie -march=armv7-a -mfloat-abi=softfp -mfpu=neon"
-
-     CPU=armv7-a
-
-     ARCH=arm
-
-     HOST=arm-linux
-
-     SYSROOT=$NDK/toolchains/llvm/prebuilt/linux-x86\_64/sysroot
-
-     CROSS\_PREFIX=$NDK/toolchains/llvm/prebuilt/linux-x86\_64/bin/armv7a-linux-androideabi21-
-
-     PREFIX=$\(pwd\)/android/$CPU
-
-     x264=$\(pwd\)/x264/android/$CPU
-
-   configure\(\) { ./configure  --prefix=$PREFIX  --disable-encoders  --disable-decoders  --disable-avdevice  --disable-static  --disable-doc  --disable-ffplay  --disable-network  --disable-doc  --disable-symver  --enable-neon  --enable-shared  --enable-libx264  --enable-gpl  --enable-pic  --enable-jni  --enable-pthreads  --enable-mediacodec  --enable-encoder=aac  --enable-encoder=gif  --enable-encoder=libopenjpeg  --enable-encoder=libmp3lame  --enable-encoder=libwavpack  --enable-encoder=libx264  --enable-encoder=mpeg4  --enable-encoder=pcm\_s16le  --enable-encoder=png  --enable-encoder=srt  --enable-encoder=subrip  --enable-encoder=yuv4  --enable-encoder=text  --enable-decoder=aac  --enable-decoder=aac\_latm  --enable-decoder=libopenjpeg  --enable-decoder=mp3  --enable-decoder=mpeg4\_mediacodec  --enable-decoder=pcm\_s16le  --enable-decoder=flac  --enable-decoder=flv  --enable-decoder=gif  --enable-decoder=png  --enable-decoder=srt  --enable-decoder=xsub  --enable-decoder=yuv4  --enable-decoder=vp8\_mediacodec  --enable-decoder=h264\_mediacodec  --enable-decoder=hevc\_mediacodec  --enable-ffmpeg  --enable-bsf=aac\_adtstoasc  --enable-bsf=h264\_mp4toannexb  --enable-bsf=hevc\_mp4toannexb  --enable-bsf=mpeg4\_unpack\_bframes  --enable-cross-compile  --cross-prefix=$CROSS\_PREFIX  --target-os=android  --arch=$ARCH  --sysroot=$SYSROOT  --extra-cflags="-I$x264/include $ADDI\_CFLAGS"  --extra-ldflags="-L$x264/lib $ADDI\_LDFLAGS" }
-
-   build\(\) { make clean
-
-   configure make -j4 make install }
+      configure
+      make -j4
+      make install
+   }
 
    build
-
-   ```text
-   查看所有编译配置选项：./configure --help
-   查看支持的解码器：./configure --list-decoders
-   查看支持的编码器：./configure --list-encoders
-   查看支持的硬件加速：./configure --list-hwaccels
-   1. build之前需要执行 ```./configure
    ```
 
-   1. 赋予脚本执行权限：`chmod +x build.sh`
-   2. 执行脚本开始编译：`./build.sh`
+   查看所有编译配置选项：./configure --help 查看支持的解码器：./configure --list-decoders 查看支持的编码器：./configure --list-encoders 查看支持的硬件加速：./configure --list-hwaccels 1. build之前需要执行 `./configure` 2. 赋予脚本执行权限：`chmod +x build.sh` 3. 执行脚本开始编译：`./build.sh`
 
 ### 报错汇总
 
