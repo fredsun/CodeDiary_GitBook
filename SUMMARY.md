@@ -10,3 +10,7 @@
 
 * [FFmpeg Android](ffmpeg/ffmpeg-android.md)
 
+## Android
+
+* [Skills](android/skills.md)
+
