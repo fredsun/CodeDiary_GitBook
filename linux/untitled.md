@@ -26,6 +26,8 @@ sudo vi  /etc/vim/vimrc.tiny
 
 修改 set compatible 为 set nocompatible 设置是否兼容 添加 set backspace=2 设置 backspace可以删除任意字符
 
+
+
 ### root切换
 
 * su \#进入root
