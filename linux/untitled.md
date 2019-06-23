@@ -4,7 +4,9 @@ description: 重新安装Linux后的部分设置和快捷键
 
 # Linux Tips
 
-## 设置root账户的密码
+
+
+### 设置root账户的密码
 
 ```text
 sudo passwd root
@@ -34,6 +36,19 @@ sudo vi  /etc/vim/vimrc.tiny
   破解版的 VMware Fusion, 关机-&gt;设置-&gt;硬盘-&gt;高级选项-&gt;总线类型:SATA
 
   **配置scp传送文件**
+
+### 打开当前路径
+
+```text
+nautilus ./
+```
+
+### 安装yum
+
+```text
+sudo apt-get install build-essential
+sudo apt-get install yum
+```
 
 ### Ubuntu内建命令[Ref](https://blog.csdn.net/chenyoper/article/details/78260007)
 
